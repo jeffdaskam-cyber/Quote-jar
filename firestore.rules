@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /quotes/{quoteId} {
+      // Any signed-in user can read all quotes (shared family jar)
+      allow read: if request.auth != null;
+
+      // Any signed-in user can create a quote
+      // They must supply all required fields and can only set addedBy to their own uid
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasAll(['author', 'text', 'addedBy', 'addedByName', 'createdAt'])
+        && request.resource.data.addedBy == request.auth.uid
+        && request.resource.data.author is string
+        && request.resource.data.author.size() > 0
+        && request.resource.data.author.size() <= 40
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 280;
+
+      // Only the person who added a quote can delete it
+      allow delete: if request.auth != null
+        && resource.data.addedBy == request.auth.uid;
+
+      // No edits allowed
+      allow update: if false;
+    }
+  }
+}
