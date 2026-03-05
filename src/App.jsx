@@ -75,9 +75,11 @@ export default function App() {
         url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23d97706' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
       `,
       fontFamily: "'Caveat', cursive",
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', minHeight: '100vh',
-      padding: '80px 16px 40px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      minHeight: '100vh',
+      padding: '0',
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
@@ -113,33 +115,73 @@ export default function App() {
         </div>
       </div>
 
-      {/* Centered content */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28, animation: 'floatIn 0.6s ease forwards' }}>
+      {/* Main scrollable area — jar + hint, centered vertically */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingTop: 70,
+        paddingBottom: 120,
+        gap: 24,
+        animation: 'floatIn 0.6s ease forwards',
+        width: '100%',
+      }}>
 
-        <p style={{ fontSize: '1.05rem', color: '#b45309', opacity: 0.75 }}>
-          tap the jar for a random quote
+        {/* Hint text — large */}
+        <p style={{
+          fontFamily: "'Lora', serif",
+          fontSize: 'clamp(1.5rem, 5vw, 2.2rem)',
+          color: '#92400e',
+          fontStyle: 'italic',
+          textAlign: 'center',
+          opacity: 0.85,
+          padding: '0 24px',
+          lineHeight: 1.3,
+        }}>
+          Tap the jar to see a quote
         </p>
 
+        {/* Jar */}
         <div style={{ animation: shake ? 'jarShake 0.5s ease' : successFlash ? 'successPop 0.4s ease' : 'none' }}>
           <Jar onClick={handleJarClick} quotes={quotes} />
         </div>
 
-        <div style={{ fontSize: '0.9rem', color: '#b45309', opacity: 0.6, marginTop: -16, textAlign: 'center' }}>
+        {/* Quote count */}
+        <div style={{ fontFamily: "'Caveat', cursive", fontSize: '1.1rem', color: '#b45309', opacity: 0.65, textAlign: 'center' }}>
           {quotesLoading ? 'loading…' : quotes.length === 0
             ? 'the jar is empty!'
             : `${quotes.length} quote${quotes.length !== 1 ? 's' : ''} inside`}
         </div>
-
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <ActionButton primary onClick={() => setShowAddModal(true)} disabled={animating || submitting}>
-            {animating || submitting ? '✉️ adding…' : '✏️ add a quote'}
-          </ActionButton>
-          <ActionButton onClick={() => setShowAllModal(true)}>
-            📜 all quotes
-          </ActionButton>
-        </div>
       </div>
 
+      {/* Bottom button bar — fixed */}
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0,
+        display: 'flex', gap: 0,
+        background: 'rgba(253,246,227,0.95)', backdropFilter: 'blur(10px)',
+        borderTop: '1px solid rgba(217,119,6,0.15)',
+        zIndex: 100,
+        paddingBottom: 'env(safe-area-inset-bottom)',
+      }}>
+        <ActionButton
+          primary
+          onClick={() => setShowAddModal(true)}
+          disabled={animating || submitting}
+          style={{ borderRadius: 0, flex: 1, borderRight: '1px solid rgba(217,119,6,0.15)' }}
+        >
+          {animating || submitting ? 'adding…' : 'Add a Quote'}
+        </ActionButton>
+        <ActionButton
+          onClick={() => setShowAllModal(true)}
+          style={{ borderRadius: 0, flex: 1 }}
+        >
+          All Quotes
+        </ActionButton>
+      </div>
+
+      {/* Modals */}
       {showAddModal && (
         <AddQuoteModal quotes={quotes} onSubmit={handleAddQuote} onClose={() => setShowAddModal(false)} />
       )}
@@ -156,7 +198,7 @@ export default function App() {
   )
 }
 
-function ActionButton({ onClick, children, primary, disabled }) {
+function ActionButton({ onClick, children, primary, disabled, style }) {
   const [hover, setHover] = useState(false)
   return (
     <button
@@ -167,15 +209,17 @@ function ActionButton({ onClick, children, primary, disabled }) {
       style={{
         background: primary
           ? (disabled ? '#e5d5b5' : hover ? 'linear-gradient(135deg,#fbbf24,#d97706)' : 'linear-gradient(135deg,#f59e0b,#d97706)')
-          : (hover ? 'rgba(217,119,6,0.12)' : 'rgba(255,255,255,0.8)'),
+          : (hover ? 'rgba(217,119,6,0.08)' : 'transparent'),
         color: primary ? (disabled ? '#a78b6f' : 'white') : '#92400e',
-        border: primary ? 'none' : '1.5px solid rgba(217,119,6,0.3)',
-        borderRadius: 10, padding: '12px 26px',
-        fontFamily: "'Caveat', cursive", fontSize: '1.15rem', fontWeight: 700,
+        border: 'none',
+        padding: '18px 12px',
+        fontFamily: "'Lora', serif",
+        fontSize: 'clamp(1.1rem, 3.5vw, 1.4rem)',
+        fontWeight: 600,
         cursor: disabled ? 'default' : 'pointer',
-        boxShadow: primary && !disabled ? '0 3px 12px rgba(217,119,6,0.35)' : '0 2px 8px rgba(0,0,0,0.06)',
         transition: 'all 0.18s',
-        transform: hover && !disabled ? 'translateY(-1px)' : 'none',
+        letterSpacing: '0.01em',
+        ...style,
       }}
     >
       {children}
