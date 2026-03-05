@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import {
-  collection, addDoc, onSnapshot,
+  collection, addDoc, deleteDoc, doc, onSnapshot,
   serverTimestamp, query, orderBy
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
@@ -32,10 +32,14 @@ export function useQuotes() {
     await addDoc(collection(db, COLLECTION), {
       author,
       text,
-      addedBy,       // uid of the person who submitted it
-      addedByName,   // display name of submitter
+      addedBy,
+      addedByName,
       createdAt: serverTimestamp(),
     })
+  }
+
+  const deleteQuote = async (id) => {
+    await deleteDoc(doc(db, COLLECTION, id))
   }
 
   const randomQuote = () => {
@@ -43,5 +47,5 @@ export function useQuotes() {
     return quotes[Math.floor(Math.random() * quotes.length)]
   }
 
-  return { quotes, loading, error, addQuote, randomQuote }
+  return { quotes, loading, error, addQuote, deleteQuote, randomQuote }
 }
