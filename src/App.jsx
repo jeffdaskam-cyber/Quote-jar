@@ -149,7 +149,7 @@ export default function App() {
         </div>
 
         {/* Quote count */}
-        <div style={{ fontFamily: "'Caveat', cursive", fontSize: '1.1rem', color: '#b45309', opacity: 0.65, textAlign: 'center' }}>
+        <div style={{ fontFamily: "'Lora', serif", fontSize: 'clamp(1.4rem, 4.5vw, 1.9rem)', color: '#92400e', fontStyle: 'italic', textAlign: 'center', opacity: 0.85 }}>
           {quotesLoading ? 'loading…' : quotes.length === 0
             ? 'the jar is empty!'
             : `${quotes.length} quote${quotes.length !== 1 ? 's' : ''} inside`}

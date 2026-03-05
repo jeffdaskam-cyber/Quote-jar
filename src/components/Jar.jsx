@@ -6,7 +6,7 @@ export default function Jar({ onClick, quotes }) {
         cursor: "pointer",
         userSelect: "none",
         position: "relative",
-        width: 260,
+        width: 390,
         margin: "0 auto",
       }}
     >
@@ -21,26 +21,6 @@ export default function Jar({ onClick, quotes }) {
         }}
         draggable={false}
       />
-      {quotes.length > 0 && (
-        <div style={{
-          position: "absolute",
-          top: 12, right: 8,
-          background: "#7c2d12",
-          color: "#fef3c7",
-          borderRadius: "50%",
-          width: 32, height: 32,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 14,
-          fontFamily: "'Caveat', cursive",
-          fontWeight: 700,
-          boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-          border: "2px solid #fef3c7",
-        }}>
-          {quotes.length > 99 ? "99+" : quotes.length}
-        </div>
-      )}
     </div>
   )
 }
