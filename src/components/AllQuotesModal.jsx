@@ -137,10 +137,10 @@ export default function AllQuotesModal({ quotes, currentUserId, onDelete, onClos
                       transition: 'transform 0.15s',
                     }}
                   >
-                    <div style={{ fontSize: 13, color: '#78350f', fontWeight: 700, marginBottom: 4 }}>
+                    <div style={{ fontSize: '1.1rem', color: '#78350f', fontWeight: 700, marginBottom: 6 }}>
                       {q.author}
                     </div>
-                    <div style={{ fontSize: '1.05rem', color: '#451a03', lineHeight: 1.4, marginBottom: 6 }}>
+                    <div style={{ fontSize: '1.25rem', color: '#451a03', lineHeight: 1.45, marginBottom: 6, whiteSpace: 'normal' }}>
                       "{q.text}"
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6 }}>
